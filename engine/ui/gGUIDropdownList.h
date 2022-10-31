@@ -1,7 +1,7 @@
 /*
  * gGUIDropdownList.h
  *
- *  Created on: 19 Aðu 2022
+ *  Created on: 19 Aï¿½u 2022
  *      Author: sevval
  */
 
@@ -26,7 +26,7 @@ public:
 	virtual ~gGUIDropdownList();
 	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 	void draw();
-	void addList(gGUIFrame *frame);
+	void setParentFrame(gGUIFrame *frame);
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 	void mouseScrolled(int x, int y);
@@ -45,7 +45,8 @@ private:
 	int textboxh;
 	int listx, listy, listw;
 	bool listopened, selectedline, listexpanded, pressedonlist, buttonpressed;
-
+	bool lopened;
+	gGUIFrame *frame;
 };
 
 

@@ -1,7 +1,7 @@
 /*
  * gGUIDropdownList.cpp
  *
- *  Created on: 19 Aðu 2022
+ *  Created on: 19 Aï¿½u 2022
  *      Author: sevval
  */
 
@@ -29,9 +29,10 @@ gGUIDropdownList::gGUIDropdownList() {
 	listexpanded = false;
 	pressedonlist = false;
 	buttonpressed = false;
+	frame = nullptr;
 
 
-	actionmanager.addAction(&button, G_GUIEVENT_BUTTONPRESSED, this, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
+	actionmanager.addAction(&button, G_GUIEVENT_BUTTONRELEASED, this, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
 	actionmanager.addAction(&list, G_GUIEVENT_TREELISTSELECTED, this, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
 	actionmanager.addAction(&list, G_GUIEVENT_TREELISTEXPANDED, this, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
 	actionmanager.addAction(&list, G_GUIEVENT_MOUSEPRESSEDONTREELIST, this, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
@@ -62,9 +63,10 @@ void gGUIDropdownList::set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, g
 }
 
 void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEventType, std::string value1, std::string value2) {
-	if(sourceEventType == G_GUIEVENT_BUTTONPRESSED) {
+	if(sourceEventType == G_GUIEVENT_BUTTONRELEASED) {
 		buttonpressed = true;
 		listopened = !listopened;
+		frame->addTreelist(&list, listx, listy, listw);
 		root->getCurrentCanvas()->onGuiEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
 		actionmanager.onGUIEvent(id, G_GUIEVENT_TREELISTOPENEDONDROPDOWNLIST);
 	}
@@ -82,15 +84,16 @@ void gGUIDropdownList::onGUIEvent(int guiObjectId, int eventType, int sourceEven
 void gGUIDropdownList::draw() {
 	gGUIContainer::draw();
 	if(listopened) {
-		list.draw();
+//		list.draw();
 	}
 //	gColor* oldcolor = renderer->getColor();
 //	renderer->setColor(oldcolor);
 
 }
 
-void gGUIDropdownList::addList(gGUIFrame *frame) {
-	(*frame).addTreelist(&list, listx, listy, listw);
+void gGUIDropdownList::setParentFrame(gGUIFrame *frame) {
+	this->frame = frame;
+//	(*frame).addTreelist(&list, listx, listy, listw);
 }
 
 
@@ -110,11 +113,14 @@ void gGUIDropdownList::mousePressed(int x, int y, int button) {
 }
 
 void gGUIDropdownList::mouseReleased(int x, int y, int button) {
-	bool o = listopened;
+	lopened = listopened;
 	gGUIContainer::mouseReleased(x, y, button);
 	list.mouseReleased(x, y, button);
 	setSelectedTitle();
-	if(o && !pressedonlist) listopened = false;
+	if(lopened && !pressedonlist) {
+		listopened = false;
+		frame->addTreelist(nullptr, listx, listy, listw);
+	}
 }
 
 void gGUIDropdownList::mouseScrolled(int x, int y) {

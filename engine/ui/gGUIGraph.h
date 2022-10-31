@@ -27,66 +27,86 @@
  ****************************************************************************/
 
 /****************************************************************************
- * Author: Berke Adil, Utku Sarialan, 2022-on                               *
+ * Author: Noyan Culum, Utku Sarialan, 2022                                 *
  ****************************************************************************/
 
 /*
- * gGUICandleStickChart.h
+ * gGUIGraph.h
  *
- *  Created on: 15 Aðu 2022
- *      Author: Berke Adil
+ *  Created on: Sep 23, 2022
+ *      Author: noyan
  */
 
-#ifndef UI_GGUICANDLESTICKCHART_H_
-#define UI_GGUICANDLESTICKCHART_H_
+#ifndef UI_GGUIGRAPH_H_
+#define UI_GGUIGRAPH_H_
 
-#include "gImage.h"
-#include "gGUIFrame.h"
-#include "gGUIPanel.h"
-#include "gGUIButton.h"
-#include "gGUITextbox.h"
 #include "gGUIControl.h"
-#include "gLine.h"
-#include "gRectangle.h"
-#include "gGUIGraph.h"
 
-
-class gGUICandleStickChart: public gGUIGraph {
-
+/**
+ * This is a base class for all Graph classes. Developers can use the child classes
+ * of this class for their graph needs.
+ */
+class gGUIGraph: public gGUIControl {
 public:
-	gGUICandleStickChart();
-	virtual ~gGUICandleStickChart();
+	gGUIGraph();
+	virtual ~gGUIGraph();
 
-	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
+	virtual void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 
-	void setMaxX(int maxX);
-	void setMinX(int minX);
-	void setMaxY(int maxY);
-	void setMinY(int minY);
+	virtual void setMaxX(int maxX);
+	int getMaxX();
+	virtual void setMinX(int minX);
+	int getMinX();
+	virtual void setMaxY(int maxY);
+	int getMaxY();
+	virtual void setMinY(int minY);
+	int getMinY();
 
-	void setLabelCountX(int labelCount);
-	void setLabelCountY(int labelCount);
+	void enableGridlinesX(bool isEnabled);
+	void enableGridlinesY(bool isEnabled);
 
-	void setHighColor(gColor highColor);
-	gColor getHighColor();
-	void setLowColor(gColor lowColor);
-	gColor getLowColor();
+	void setTitleX(std::string titleX);
+	std::string getTitleX();
+	void setTitleY(std::string titleY);
+	std::string getTitleY();
 
-	void addPointToLine(float x, float high, float low, float open, float close);
-	void setCandleWidth(float candleWidth);
-	float getCandleWidth();
+	virtual void setLabelCountX(int labelCount);
+	int getLabelCountX();
+	virtual void setLabelCountY(int labelCount);
+	int getLabelCountY();
+
+	virtual void enableRange(bool isRangeEnabled);
+	virtual void setRange(float rangeStart, float rangeEnd);
+	int getRangeStart();
+	int getRangeEnd();
+
+	void draw();
+
+protected:
+	float axisx1, axisy1, axisx2, axisy2, axisxstart, axisystart;
+	float axisxw, axisyh;
+	float maxy, miny, maxx, minx;
+	float largestvaluex, largestvaluey, smallestvaluex, smallestvaluey;
+	bool gridlinesxenabled, gridlinesyenabled;
+	bool floatlabelsenabled;
+	int labelcountx, labelcounty;
+	int rangestart, rangeend;
+	bool rangeenabled;
 
 private:
-	void drawGraph();
-	void updatePoints();
-
-	std::vector<std::array<float, 10>> graphline;
-	gColor highcolor;
-	gColor lowcolor;
-
-	int candlew;
+	void drawBackground();
+	void drawLabels();
+	virtual void drawGraph();
+	void updateLabelsX();
+	void updateLabelsY();
+	int countDigits(int number);
+	float labelwidthx, labelwidthy;
+	std::string axisytitle, axisxtitle;
+	std::vector<int> labelsx;
+	std::vector<int> labelsy;
+	std::vector<float> floatlabelsx;
+	std::vector<float> floatlabelsy;
+	std::vector<int> labelsteps;
 };
 
-
-
-#endif /* UI_GGUICANDLESTICKCHART_H_ */
+#endif /* UI_GGUIGRAPH_H_ */

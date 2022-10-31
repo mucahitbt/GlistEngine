@@ -1,3 +1,35 @@
+/****************************************************************************
+ * Copyright (c) 2014 Nitra Games Ltd., Istanbul, Turkey                    *
+ *                                                                          *
+ * Permission is hereby granted, free of charge, to any person obtaining a  *
+ * copy of this software and associated documentation files (the            *
+ * "Software"), to deal in the Software without restriction, including      *
+ * without limitation the rights to use, copy, modify, merge, publish,      *
+ * distribute, distribute with modifications, sublicense, and/or sell       *
+ * copies of the Software, and to permit persons to whom the Software is    *
+ * furnished to do so, subject to the following conditions:                 *
+ *                                                                          *
+ * The above copyright notice and this permission notice should not be      *
+ * deleted from the source form of the Software.                            *
+ *                                                                          *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *
+ * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
+ *                                                                          *
+ * Except as contained in this notice, the name(s) of the above copyright   *
+ * holders shall not be used in advertising or otherwise to promote the     *
+ * sale, use or other dealings in this Software without prior written       *
+ * authorization.                                                           *
+ ****************************************************************************/
+
+/****************************************************************************
+ * Author: Berke Adil, Utku Sarialan, 2022-on                               *
+ ****************************************************************************/
+
 /*
  * gGUILineGraph.h
  *
@@ -14,87 +46,43 @@
 #include "gGUIPanel.h"
 #include "gGUIButton.h"
 #include "gGUITextbox.h"
-#include "gGUIControl.h"
+#include "gGUIGraph.h"
 #include "gLine.h"
 #include "gRectangle.h"
 #include "gCircle.h"
 
-class gGUILineGraph: public gGUIControl  {
+class gGUILineGraph: public gGUIGraph  {
 
 public:
 	gGUILineGraph();
 	virtual ~gGUILineGraph();
 
-	void setSize(int width, int height);
-	void setDisabled(bool isDisabled);
-	void setTextVisibility(bool isVisible);
+	void set(gBaseApp* root, gBaseGUIObject* topParentGUIObject, gBaseGUIObject* parentGUIObject, int parentSlotLineNo, int parentSlotColumnNo, int x, int y, int w, int h);
 
-	bool isDisabled();
+	void setMaxX(int maxX);
+	void setMinX(int minX);
+	void setMaxY(int maxY);
+	void setMinY(int minY);
 
-	void setLinePartColor(gColor color);
-	void setDisabledLinePartColor(gColor color);
-	void setGraphColor(gColor color);
-	void setLineDrawerColor(gColor color);
-	void setmultiLineColor(gColor color);
+	void setLabelCountX(int labelCount);
+	void setLabelCountY(int labelCount);
 
+	void enablePoints(bool arePointsEnabled);
+	void setLineColor(int lineIndex, gColor lineColor);
+	gColor getLineColor(int lineIndex);
 
-	gColor* getLineDrawerColor();
-	gColor* getLinePartColor();
-	gColor* getGraphColor();
-	gColor* getDisabledLinePartColor();
-	gColor* getDisabledLinePartFontColor();
-	gColor* getmultiLineColor();
-
-	virtual void update();
-
-	void draw();
-	void graph();
-	void addValue(float x, float y);
-	void addMultiValue(float title, float mx, float my);
-	void addpoint();
-	void addMultiPoint();
-	void drawLine();
-	void drawMultiline();
-
-
-	void drawXAxis();
-	void drawYAxis();
-	void setXAxisValues(int min, int max, int range);
-	void setYAxisValues(int min, int max, int range);
-
-
-protected:
-	bool ispressed;
-	int lpw, lph;
-	bool istextvisible;
-	bool istoggle;
-	bool ispressednow;
-	bool isdisabled;
-	gColor lpcolor, pressedlpcolor, disabledlpcolor, lgcolor, ldcolor, mlcolor; //LP=linepart, LG=linegraph, LD=linedrawer, ML=multiline
-	gColor lpfcolor, pressedlpfcolor, disabledlpfcolor; //font
-
-	void resetTitlePosition();
-
+	void addLine();
+	void addData(int lineIndex, std::vector<std::array<float, 2>> dataToAdd);
+	void addPointToLine(int lineIndex, float x, float y);
 
 private:
-	gLine line1;
-	gLine line2;
-	gRectangle points[300];
-	float x[300];
-	float y[300];
-	float mx[300];
-	float my[300];
-	int pointnum;
-	int multinum;
-	int rangepointx, rangepointy;
-	gLine lines[300];
-	int maxy;
-	int maxx;
+	void drawGraph();
+	void updatePoints();
 
-	std::vector<std::vector<int>> linesX;
-	std::vector<std::vector<int>> linesY;
+	std::vector<std::vector<std::array<float, 4>>> graphlines;
+	gColor linecolors[5];
 
-	bool shown;
+	bool arepointsenabled;
 };
 
 
